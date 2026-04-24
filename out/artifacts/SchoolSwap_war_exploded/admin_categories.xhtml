@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SchoolSwap - Gestion des Catégories</title>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+   <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+
+<h:body>
+   <h:panelGroup rendered="#{!loginBean.admin}">
+      <div class="access-denied">
+         <div class="access-denied-icon">🔒</div>
+         <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+            Accès refusé
+         </h1>
+         <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+            Vous n'avez pas les droits nécessaires pour accéder à cette page.
+         </p>
+         <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+            → Se connecter
+         </h:link>
+      </div>
+   </h:panelGroup>
+
+   <h:panelGroup rendered="#{loginBean.admin}">
+      <ui:include src="./_sidebarAdmin.xhtml"/>
+   <div class="main-layout">
+
+      <main class="content-area">
+
+         <div class="page-header">
+            <div>
+               <h2 class="page-title">
+                  <i class="fa-solid fa-tags page-title-icon text-primary"></i>
+                  Gestion des Catégories
+               </h2>
+               <p class="page-subtitle">Ajoutez, modifiez ou supprimez les catégories de la marketplace.</p>
+            </div>
+
+            <div class="flex" style="align-items: center; gap: var(--space-3);">
+               <div style="text-align: right;">
+                  <div class="font-bold text-primary">#{loginBean.user.prenom} #{loginBean.user.nom}</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Administrateur</div>
+               </div>
+               <img src="https://ui-avatars.com/api/?name=#{loginBean.user.prenom}+#{loginBean.user.nom}&amp;background=8E44AD&amp;color=fff"
+                    alt="Profile" style="height: 44px; width: 44px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);" />
+            </div>
+         </div>
+
+         <div class="card mb-6" style="max-width: 800px;">
+            <div class="card-header">
+               <h3 style="font-size: var(--font-size-lg);">
+                  <h:outputText value="#{categorieBean.modeEdition ? '✏️ Modifier la catégorie' : '✨ Créer une nouvelle catégorie'}" />
+               </h3>
+            </div>
+            <div class="card-body">
+               <h:form id="formCategorie">
+                  <div class="flex" style="gap: var(--space-4); align-items: flex-end; flex-wrap: wrap;">
+
+                     <div class="form-group mb-0" style="flex: 2; min-width: 200px;">
+                        <label class="form-label">Nom de la catégorie <span class="text-danger">*</span></label>
+                        <h:inputText value="#{categorieBean.nomCategorie}" class="form-control" a:placeholder="Ex: Livres de Mathématiques..." required="true" />
+                     </div>
+
+                     <div class="form-group mb-0" style="flex: 1; min-width: 150px;">
+                        <label class="form-label">Type d'article <span class="text-danger">*</span></label>
+                        <h:selectOneMenu value="#{categorieBean.typeArticle}" class="form-control">
+                           <f:selectItem itemValue="Livre" itemLabel="Livre 📚" />
+                           <f:selectItem itemValue="Materiau" itemLabel="Matériau 🎒" />
+                        </h:selectOneMenu>
+                     </div>
+
+                     <div class="flex gap-2">
+                        <h:commandButton rendered="#{categorieBean.modeEdition}" action="#{categorieBean.annuler}" value="Annuler" class="btn btn-outline" style="height: 46px;" immediate="true" />
+                        <h:commandButton action="#{categorieBean.enregistrer}"
+                                         value="#{categorieBean.modeEdition ? '💾 Mettre à jour' : '➕ Ajouter'}"
+                                         class="btn btn-primary" style="height: 46px;" />
+                     </div>
+                  </div>
+               </h:form>
+            </div>
+         </div>
+
+         <div class="card">
+            <div class="card-header">
+               <h3 style="font-size: var(--font-size-lg);">Catégories existantes</h3>
+               <div class="badge badge-primary">#{categorieBean.categories.size()} catégories</div>
+            </div>
+
+            <div class="card-body" style="padding: 0;">
+               <div class="table-wrapper" style="border: none; border-radius: 0; box-shadow: none;">
+                  <h:form id="tableForm">
+                     <table class="data-table">
+                        <thead>
+                        <tr>
+                           <th style="width: 80px;">ID</th>
+                           <th>Nom de la Catégorie</th>
+                           <th>Type d'article</th>
+                           <th style="width: 250px; text-align: right;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <h:panelGroup rendered="#{empty categorieBean.categories}">
+                           <tr>
+                              <td colspan="4">
+                                 <div class="empty-state">
+                                    <i class="fa-solid fa-folder-open empty-state-icon"></i>
+                                    <h3 class="empty-state-title">Aucune catégorie</h3>
+                                    <p class="empty-state-text">La base de données est vide. Commencez par en ajouter une !</p>
+                                 </div>
+                              </td>
+                           </tr>
+                        </h:panelGroup>
+
+                        <ui:repeat value="#{categorieBean.categories}" var="c" rendered="#{not empty categorieBean.categories}">
+                           <tr>
+                              <td class="font-bold text-muted">##{c.id}</td>
+                              <td class="font-semibold text-primary">#{c.nom}</td>
+
+                              <td>
+                                 <h:panelGroup rendered="#{c.type == 'Livre'}">
+                                    <span class="badge badge-secondary"><i class="fa-solid fa-book"></i> Livre</span>
+                                 </h:panelGroup>
+                                 <h:panelGroup rendered="#{c.type == 'Materiau'}">
+                                    <span class="badge badge-accent"><i class="fa-solid fa-toolbox"></i> Matériau</span>
+                                 </h:panelGroup>
+                              </td>
+
+                              <td style="text-align: right;">
+                                 <div class="table-actions" style="justify-content: flex-end;">
+                                    <h:commandLink action="#{categorieBean.preparerModification(c)}" class="btn btn-ghost btn-sm text-primary">
+                                       <i class="fa-solid fa-pen"></i> Éditer
+                                    </h:commandLink>
+
+                                    <h:commandLink action="#{categorieBean.supprimer(c.id)}" class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('⚠️ Attention ! Supprimer cette catégorie effacera AUSSI tous les articles qui y sont liés. Continuer ?');">
+                                       <i class="fa-solid fa-trash-can"></i> Supprimer
+                                    </h:commandLink>
+                                 </div>
+                              </td>
+                           </tr>
+                        </ui:repeat>
+
+                        </tbody>
+                     </table>
+                  </h:form>
+               </div>
+            </div>
+         </div>
+
+      </main>
+
+   </div>
+</h:panelGroup>
+</h:body>
+</html>

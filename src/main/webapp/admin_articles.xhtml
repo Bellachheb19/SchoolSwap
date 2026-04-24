@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SchoolSwap - Administration des articles</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+
+<h:body>
+    <h:panelGroup rendered="#{!loginBean.admin}">
+        <div class="access-denied">
+            <div class="access-denied-icon">🔒</div>
+            <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+                Accès refusé
+            </h1>
+            <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+                Vous n'avez pas les droits nécessaires pour accéder à cette page.
+            </p>
+            <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+                → Se connecter
+            </h:link>
+        </div>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{loginBean.admin}">
+        <ui:include src="./_sidebarAdmin.xhtml"/>
+    <div class="main-layout">
+
+        <main class="content-area">
+
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title">
+                        <i class="fa-solid fa-boxes-stacked page-title-icon text-primary"></i>
+                        Gestion des Articles
+                    </h2>
+                    <p class="page-subtitle">Gérez les annonces publiées sur la plateforme SchoolSwap.</p>
+                </div>
+
+                <div class="flex" style="align-items: center; gap: var(--space-3);">
+                    <div style="text-align: right;">
+                        <div class="font-bold text-primary">#{loginBean.user.prenom} #{loginBean.user.nom}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Administrateur</div>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=#{loginBean.user.prenom}+#{loginBean.user.nom}&amp;background=8E44AD&amp;color=fff"
+                         alt="Profile" style="height: 44px; width: 44px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);" />
+                </div>
+            </div>
+
+            <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="stat-card stat-primary">
+                    <i class="fa-solid fa-newspaper stat-card-icon text-primary"></i>
+                    <div class="stat-card-value">#{adminArticleBean.articles.size()}</div>
+                    <div class="stat-card-label">Total des articles publiés</div>
+                </div>
+
+                <div class="stat-card stat-secondary">
+                    <i class="fa-solid fa-check-circle stat-card-icon text-secondary"></i>
+                    <div class="stat-card-value">Actif</div>
+                    <div class="stat-card-label">État de la plateforme</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 style="font-size: var(--font-size-lg);">Articles de la plateforme</h3>
+                </div>
+
+                <div class="card-body" style="padding: 0;">
+                    <div class="table-wrapper" style="border: none; border-radius: 0; box-shadow: none;">
+                        <h:form>
+                            <table class="data-table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Titre</th>
+                                    <th>Prix</th>
+                                    <th>Catégorie</th>
+                                    <th>Vendeur</th>
+                                    <th>Date de pub.</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <h:panelGroup rendered="#{empty adminArticleBean.articles}">
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="empty-state">
+                                                <i class="fa-solid fa-box-open empty-state-icon"></i>
+                                                <h3 class="empty-state-title">Aucun article</h3>
+                                                <p class="empty-state-text">La base de données des articles est vide.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </h:panelGroup>
+
+                                <ui:repeat value="#{adminArticleBean.articles}" var="a" rendered="#{not empty adminArticleBean.articles}">
+                                    <tr>
+                                        <td class="font-bold text-muted">##{a.id}</td>
+
+                                        <td>
+                                            <div class="flex" style="align-items: center; gap: var(--space-3);">
+                                                <span class="font-semibold">#{a.titre}</span>
+                                            </div>
+                                        </td>
+
+                                        <td class="font-bold text-primary">#{a.prix} DH</td>
+
+                                        <td>
+                                                <span class="badge badge-primary">
+                                                    #{a.idCat.nom}
+                                                </span>
+                                        </td>
+
+                                        <td style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
+                                            #{a.idUser.prenom} #{a.idUser.nom}
+                                        </td>
+
+                                        <td><i class="fa-solid fa-calendar-day text-muted"></i> #{a.datePublication}</td>
+
+                                        <td>
+                                            <div class="table-actions">
+                                                <h:commandLink action="#{adminArticleBean.supprimerArticle(a.id)}"
+                                                               class="btn btn-danger btn-sm"
+                                                               onclick="return confirm('Voulez-vous vraiment supprimer définitivement cet article ?');">
+                                                    <i class="fa-solid fa-trash-can"></i> Supprimer
+                                                </h:commandLink>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+
+                                </tbody>
+                            </table>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+</h:panelGroup>
+</h:body>
+</html>

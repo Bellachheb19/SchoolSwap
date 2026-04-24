@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>Détails de l'article — SchoolSwap</title>
+   <meta name="description" content="Consultez les détails de cet article scolaire sur SchoolSwap."/>
+   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+   <h:outputStylesheet library="css" name="schoolswap.css"/>
+</h:head>
+
+<h:body>
+   <h:panelGroup rendered="#{!loginBean.etudiant}">
+      <div class="access-denied">
+         <div class="access-denied-icon">🔒</div>
+         <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+            Accès refusé
+         </h1>
+         <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+            Vous n'avez pas les droits nécessaires pour accéder à cette page.
+         </p>
+         <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+            → Se connecter
+         </h:link>
+      </div>
+   </h:panelGroup>
+
+   <h:panelGroup rendered="#{loginBean.etudiant}">
+
+      <!-- Paramètre + chargement -->
+      <f:metadata>
+         <f:viewParam name="id" value="#{detailsBean.articleId}"/>
+         <f:viewAction action="#{detailsBean.loadArticle}"/>
+      </f:metadata>
+
+      <div style="min-height:100vh; background:var(--color-bg); padding:var(--space-8);">
+
+         <!-- Breadcrumb -->
+         <div class="breadcrumb">
+            <h:link value="🏠 Accueil" outcome="accueil.xhtml" styleClass=""/>
+            <span class="breadcrumb-sep">›</span>
+            <span>#{detailsBean.article.idCat.nom}</span>
+            <span class="breadcrumb-sep">›</span>
+            <span style="color:var(--color-text); font-weight:500;">Détails</span>
+         </div>
+
+         <div class="detail-layout">
+
+            <!-- Colonne principale -->
+            <div>
+
+               <div class="card" style="margin-bottom:var(--space-5);">
+                  <div class="card-body">
+
+
+
+
+
+                     <!-- Photo de l'article -->
+                     <h:panelGroup style="margin-bottom:var(--space-4); display:flex; justify-content:center;">
+                        <img
+                                src="#{empty detailsBean.article.photo
+              ? 'https://placehold.co/600x400/EAFAF1/27AE60?text=Image+Article'
+              : detailsBean.article.photo}"
+                                alt="#{detailsBean.article.titre}"
+                                style="width:90%; max-width:500px; height:300px; object-fit:cover; border-radius:8px;"/>
+                     </h:panelGroup>
+
+
+
+
+                     <!-- Badges -->
+                     <div style="display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-4);">
+                        <span class="badge badge-primary">📚 #{detailsBean.article.idCat.nom}</span>
+
+                        <h:panelGroup rendered="#{detailsBean.article.etat == 'Neuf'}">
+                           <span class="badge badge-neuf">✨ Neuf</span>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{detailsBean.article.etat == 'Bon_Etat'}">
+                           <span class="badge badge-bon-etat">👍 Bon état</span>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{detailsBean.article.etat == 'Ancien_Usage'}">
+                           <span class="badge badge-use">🔄 Usé</span>
+                        </h:panelGroup>
+                     </div>
+
+                     <h1 class="detail-title">#{detailsBean.article.titre}</h1>
+
+                     <!-- Méta infos -->
+                     <div class="detail-meta-grid" style="margin:var(--space-5) 0;">
+                        <div class="detail-meta-item">
+                           <span class="detail-meta-label">📅 Date de publication</span>
+                           <span class="detail-meta-value">#{detailsBean.article.datePublication}</span>
+                        </div>
+                        <div class="detail-meta-item">
+                           <span class="detail-meta-label">📍 Ville</span>
+                           <span class="detail-meta-value">#{detailsBean.article.ville}</span>
+                        </div>
+                     </div>
+
+                     <!-- Description -->
+                     <div style="border-top:1px solid var(--color-border); padding-top:var(--space-5);">
+                        <h3 style="margin-bottom:var(--space-3); font-size:var(--font-size-lg);">📄 Description</h3>
+                        <p style="color:var(--color-text-muted); line-height:1.8;">
+                           #{detailsBean.article.description}
+                        </p>
+                     </div>
+
+                  </div>
+               </div>
+
+               <h:link styleClass="btn btn-ghost" outcome="accueil.xhtml">
+                  ← Retour à l'accueil
+               </h:link>
+
+            </div>
+
+            <!-- Colonne droite : prix + vendeur -->
+            <div>
+
+               <!-- Prix -->
+               <div class="detail-price-box" style="margin-bottom:var(--space-4);">
+                  <div style="font-size:var(--font-size-sm); color:var(--color-text-muted); margin-bottom:var(--space-2);">💰 Prix de vente</div>
+                  <div class="detail-price-amount">
+                     #{detailsBean.article.prix} DH
+                  </div>
+               </div>
+
+               <!-- Bouton contacter -->
+               <a href="tel:#{detailsBean.article.idUser.telephone}" class="btn btn-primary btn-full btn-lg" style="text-decoration: none; font-size: 1.1rem;">
+                  📞 #{detailsBean.article.idUser.telephone}
+               </a>
+
+               <!-- Infos vendeur -->
+               <div class="detail-seller-card" style="margin-top:var(--space-4);">
+                  <h3 style="font-size:var(--font-size-base); margin-bottom:var(--space-4); color:var(--color-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; font-size:0.75rem;">
+                     👤 À propos du vendeur
+                  </h3>
+
+                  <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-4);">
+                     <div style="width:48px; height:48px; background:linear-gradient(135deg, var(--color-primary-bg), var(--color-secondary-bg)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">
+                        🧑‍🎓
+                     </div>
+                     <div>
+                        <p style="font-weight:700; font-size:var(--font-size-base); margin:0;">
+                           #{detailsBean.article.idUser.prenom} #{detailsBean.article.idUser.nom}
+                        </p>
+                        <p style="font-size:var(--font-size-sm); color:var(--color-text-muted); margin:0;">
+                           📍 #{detailsBean.article.idUser.ville}
+                        </p>
+                     </div>
+                  </div>
+
+               </div>
+
+            </div>
+
+         </div>
+
+      </div>
+   </h:panelGroup>
+</h:body>
+</html>

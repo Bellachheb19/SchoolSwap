@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<f:metadata>
+    <f:viewAction action="#{profilBean.init}"/>
+</f:metadata>
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Modifier vos informations personnelles sur SchoolSwap."/>
+    <title>Mon profil — SchoolSwap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+<h:body>
+    <h:panelGroup rendered="#{!loginBean.etudiant}">
+        <div class="access-denied">
+            <div class="access-denied-icon">🔒</div>
+            <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+                Accès refusé
+            </h1>
+            <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+                Vous n'avez pas les droits nécessaires pour accéder à cette page.
+            </p>
+            <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+                → Se connecter
+            </h:link>
+        </div>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{loginBean.etudiant}">
+    <div class="main-layout">
+        <ui:include src="./_sidebar.xhtml"/>
+
+        <main class="content-area">
+
+            <!--  En-tête de page  -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <span class="page-title-icon">
+                            <i class="fa-solid fa-user" style="color: var(--color-primary);"></i>
+                        </span>
+                        Mon profil
+                    </h1>
+                    <p class="page-subtitle">Mettez à jour vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Messages globaux -->
+            <h:messages globalOnly="true" styleClass="alert alert-success" layout="list"/>
+
+            <h:form>
+
+                <!-- Message personnalisé -->
+                <h:outputText value="#{profilBean.message}"
+                              styleClass="alert alert-info"
+                              rendered="#{not empty profilBean.message}"/>
+
+                <!-- MODE AFFICHAGE -->
+                <h:panelGroup rendered="#{!profilBean.editMode}">
+
+                    <div class="card">
+
+                        <div class="card-header">
+                            <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-id-card" style="color: var(--color-primary);"></i>
+                                Informations personnelles
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-grid-2">
+
+                                <div class="form-group">
+                                    <span class="form-label">
+                                        <i class="fa-solid fa-user form-label-icon"></i>
+                                        Nom
+                                    </span>
+                                    <p class="form-control"
+                                       style="background: var(--color-bg); color: var(--color-text-muted); cursor: default;">
+                                        #{profilBean.nom}
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <span class="form-label">
+                                        <i class="fa-solid fa-user form-label-icon"></i>
+                                        Prénom
+                                    </span>
+                                    <p class="form-control"
+                                       style="background: var(--color-bg); color: var(--color-text-muted); cursor: default;">
+                                        #{profilBean.prenom}
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <span class="form-label">
+                                        <i class="fa-solid fa-envelope form-label-icon"></i>
+                                        Email
+                                    </span>
+                                    <p class="form-control"
+                                       style="background: var(--color-bg); color: var(--color-text-muted); cursor: default;">
+                                        #{profilBean.email}
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <span class="form-label">
+                                        <i class="fa-solid fa-phone form-label-icon"></i>
+                                        Téléphone
+                                    </span>
+                                    <p class="form-control"
+                                       style="background: var(--color-bg); color: var(--color-text-muted); cursor: default;">
+                                        #{profilBean.tel}
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <span class="form-label">
+                                        <i class="fa-solid fa-location-dot form-label-icon"></i>
+                                        Ville
+                                    </span>
+                                    <p class="form-control"
+                                       style="background: var(--color-bg); color: var(--color-text-muted); cursor: default;">
+                                        #{profilBean.ville}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer flex-between">
+                            <h:commandButton value="✏️  Modifier mon profil"
+                                             action="#{profilBean.activerEdition}"
+                                             styleClass="btn btn-primary btn-pulse"/>
+                        </div>
+
+                    </div>
+
+                </h:panelGroup>
+
+
+                <!--  MODE ÉDITION  -->
+                <h:panelGroup rendered="#{profilBean.editMode}">
+
+                    <div class="card">
+
+                        <div class="card-header">
+                            <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-pen-to-square" style="color: var(--color-primary);"></i>
+                                Modifier mes informations
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+
+                            <!-- Informations personnelles -->
+                            <div class="form-grid-2">
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa-solid fa-user form-label-icon"></i>
+                                        Nom
+                                    </label>
+                                    <h:inputText value="#{profilBean.nom}"
+                                                 styleClass="form-control"
+                                                 a:placeholder="Votre nom"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa-solid fa-user form-label-icon"></i>
+                                        Prénom
+                                    </label>
+                                    <h:inputText value="#{profilBean.prenom}"
+                                                 styleClass="form-control"
+                                                 a:placeholder="Votre prénom"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa-solid fa-envelope form-label-icon"></i>
+                                        Email
+                                    </label>
+                                    <h:inputText value="#{profilBean.email}"
+                                                 styleClass="form-control"
+                                                 a:placeholder="Votre adresse email"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa-solid fa-phone form-label-icon"></i>
+                                        Téléphone
+                                    </label>
+                                    <h:inputText value="#{profilBean.tel}"
+                                                 styleClass="form-control"
+                                                 a:placeholder="Votre numéro de téléphone"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fa-solid fa-location-dot form-label-icon"></i>
+                                        Ville
+                                    </label>
+                                    <h:inputText value="#{profilBean.ville}"
+                                                 styleClass="form-control"
+                                                 a:placeholder="Votre ville"/>
+                                </div>
+
+                            </div>
+
+                            <!-- ── Séparateur mot de passe ── -->
+                            <div style="margin-top: var(--space-6); margin-bottom: var(--space-4);
+                                        border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+                                <h4 style="display: flex; align-items: center; gap: 0.5rem;
+                                           font-size: var(--font-size-base); color: var(--color-text);
+                                           margin-bottom: var(--space-4);">
+                                    <i class="fa-solid fa-lock" style="color: var(--color-secondary);"></i>
+                                    Changer le mot de passe
+                                </h4>
+
+                                <div class="form-grid-2">
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fa-solid fa-key form-label-icon"></i>
+                                            Nouveau mot de passe
+                                        </label>
+                                        <h:inputSecret value="#{profilBean.password}"
+                                                       styleClass="form-control"
+                                                       a:placeholder="Nouveau mot de passe"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fa-solid fa-key form-label-icon"></i>
+                                            Confirmer
+                                        </label>
+                                        <h:inputSecret value="#{profilBean.confirmPassword}"
+                                                       styleClass="form-control"
+                                                       a:placeholder="Confirmer le mot de passe"/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer flex-between">
+
+                            <div class="flex gap-2">
+                                <h:commandButton value="💾  Enregistrer"
+                                                 action="#{profilBean.updateProfil}"
+                                                 styleClass="btn btn-primary"/>
+
+                                <h:commandButton value="Annuler"
+                                                 action="#{profilBean.annulerEdition}"
+                                                 immediate="true"
+                                                 styleClass="btn btn-outline"/>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </h:panelGroup>
+
+            </h:form>
+
+        </main>
+    </div>
+    </h:panelGroup>
+</h:body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SchoolSwap - Administration</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+
+<h:body>
+
+    <h:panelGroup rendered="#{!loginBean.admin}">
+        <div class="access-denied">
+            <div class="access-denied-icon">🔒</div>
+            <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+                Accès refusé
+            </h1>
+            <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+                Vous n'avez pas les droits nécessaires pour accéder à cette page.
+            </p>
+            <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+                → Se connecter
+            </h:link>
+        </div>
+    </h:panelGroup>
+    <h:panelGroup rendered="#{loginBean.admin}">
+        <ui:include src="./_sidebarAdmin.xhtml"/>
+        <div class="main-layout">
+
+            <main class="content-area">
+
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">
+                            <i class="fa-solid fa-users-gear page-title-icon text-primary"></i>
+                            Gestion des Utilisateurs
+                        </h2>
+                        <p class="page-subtitle">Gérez les membres inscrits sur la plateforme SchoolSwap.</p>
+                    </div>
+
+                    <div class="flex" style="align-items: center; gap: var(--space-3);">
+                        <div style="text-align: right;">
+                            <div class="font-bold text-primary">#{loginBean.user.prenom} #{loginBean.user.nom}</div>
+                            <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Administrateur</div>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=#{loginBean.user.prenom}+#{loginBean.user.nom}&amp;background=8E44AD&amp;color=fff"
+                             alt="Profile" style="height: 44px; width: 44px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);" />
+                    </div>
+                </div>
+
+                <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="stat-card stat-primary">
+                        <i class="fa-solid fa-users stat-card-icon text-primary"></i>
+                        <div class="stat-card-value">#{adminBean.users.size()}</div>
+                        <div class="stat-card-label">Total des membres inscrits</div>
+                    </div>
+
+                    <div class="stat-card stat-secondary">
+                        <i class="fa-solid fa-shield-halved stat-card-icon text-secondary"></i>
+                        <div class="stat-card-value">Sécurisé</div>
+                        <div class="stat-card-label">État de la plateforme</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="font-size: var(--font-size-lg);">Membres de la communauté</h3>
+                    </div>
+
+                    <div class="card-body" style="padding: 0;"> <div class="table-wrapper" style="border: none; border-radius: 0; box-shadow: none;">
+                        <h:form>
+                            <table class="data-table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Ville</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <h:panelGroup rendered="#{empty adminBean.users}">
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="empty-state">
+                                                <i class="fa-solid fa-users-slash empty-state-icon"></i>
+                                                <h3 class="empty-state-title">Aucun membre</h3>
+                                                <p class="empty-state-text">La base de données des utilisateurs est vide.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </h:panelGroup>
+
+                                <ui:repeat value="#{adminBean.users}" var="u" rendered="#{not empty adminBean.users}">
+                                    <tr>
+                                        <td class="font-bold text-muted">##{u.id}</td>
+
+                                        <td>
+                                            <div class="flex" style="align-items: center; gap: var(--space-3);">
+                                                <img src="https://ui-avatars.com/api/?name=#{u.prenom}+#{u.nom}&amp;background=EAFAF1&amp;color=27AE60"
+                                                     style="width: 36px; height: 36px; border-radius: 50%;" alt="Avatar"/>
+                                                <span class="font-semibold">#{u.prenom} #{u.nom}</span>
+                                            </div>
+                                        </td>
+
+                                        <td>#{u.mail}</td>
+                                        <td style="font-size: var(--font-size-xs); color: var(--color-text-muted);">#{u.telephone}</td>
+                                        <td><i class="fa-solid fa-location-dot text-muted"></i> #{u.ville}</td>
+
+                                        <td>
+                                            <h:panelGroup rendered="#{u.role == 'Admin'}">
+                                                        <span class="badge badge-accent">
+                                                            <i class="fa-solid fa-shield-halved"></i> Admin
+                                                        </span>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{u.role == 'Etudiant'}">
+                                                        <span class="badge badge-primary">
+                                                            <i class="fa-solid fa-graduation-cap"></i> Étudiant
+                                                        </span>
+                                            </h:panelGroup>
+                                        </td>
+
+                                        <td>
+                                            <div class="table-actions">
+                                                <h:commandLink action="#{adminBean.supprimerUtilisateur(u.id)}"
+                                                               class="btn btn-danger btn-sm"
+                                                               onclick="return confirm('Voulez-vous vraiment bannir cet utilisateur ? Toutes ses annonces seront supprimées.');">
+                                                    <i class="fa-solid fa-trash-can"></i> Bannir
+                                                </h:commandLink>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+
+                                </tbody>
+                            </table>
+                        </h:form>
+                    </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </h:panelGroup>
+</h:body>
+</html>

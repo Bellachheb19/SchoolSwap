@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SchoolSwap — Achète et vends tes livres scolaires</title>
+   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+   <h:outputStylesheet name="css/schoolswap.css"/>
+   <h:outputStylesheet name="css/landing.css"/>
+</h:head>
+<h:body>
+
+   <!-- NAVBAR -->
+   <header class="landing-navbar">
+      <div class="landing-container landing-navbar-inner">
+
+         <a href="#" class="landing-brand">
+            <div class="landing-brand-icon">🎒</div>
+            <span class="landing-brand-name">SchoolSwap</span>
+         </a>
+
+         <nav class="landing-nav-links">
+            <a href="#how" class="landing-nav-link">Comment ça marche</a>
+            <a href="#categories" class="landing-nav-link">Catégories</a>
+            <a href="#why" class="landing-nav-link">Pourquoi nous</a>
+         </nav>
+
+         <div class="landing-nav-actions">
+            <a href="connexion.xhtml" class="btn btn-outline btn-sm">Se connecter</a>
+            <a href="inscription.xhtml" class="btn btn-primary btn-sm">S'inscrire</a>
+         </div>
+
+      </div>
+   </header>
+
+   <!-- HERO -->
+   <section class="landing-hero">
+      <div class="landing-container landing-hero-inner">
+
+         <div class="landing-hero-content">
+                <span class="landing-hero-badge">
+                    <i class="fa-solid fa-bolt"></i> La marketplace scolaire au Maroc
+                </span>
+            <h1 class="landing-hero-title">
+               Achète et vends tes <span class="landing-hero-highlight">livres scolaires</span> facilement
+            </h1>
+            <p class="landing-hero-subtitle">
+               Rejoins des milliers d'étudiants qui économisent sur leurs fournitures scolaires. Vends ce dont tu n'as plus besoin, trouve ce qu'il te faut.
+            </p>
+            <div class="landing-hero-actions">
+               <a href="connexion.xhtml" class="btn btn-primary btn-lg">
+                  <i class="fa-solid fa-magnifying-glass"></i> Parcourir les annonces
+               </a>
+               <a href="connexion.xhtml" class="btn btn-outline btn-lg">
+                  <i class="fa-solid fa-plus"></i> Vendre un article
+               </a>
+            </div>
+            <div class="landing-hero-stats">
+               <div class="landing-hero-stat">
+                  <span class="landing-hero-stat-value">1 000+</span>
+                  <span class="landing-hero-stat-label">Articles disponibles</span>
+               </div>
+               <div class="landing-hero-stat-divider"></div>
+               <div class="landing-hero-stat">
+                  <span class="landing-hero-stat-value">800+</span>
+                  <span class="landing-hero-stat-label">Étudiants inscrits</span>
+               </div>
+               <div class="landing-hero-stat-divider"></div>
+               <div class="landing-hero-stat">
+                  <span class="landing-hero-stat-value">50%</span>
+                  <span class="landing-hero-stat-label">D'économies moyennes</span>
+               </div>
+            </div>
+         </div>
+
+         <div class="landing-hero-visual">
+            <div class="landing-hero-card landing-hero-card-1">
+               <span class="badge badge-neuf">Neuf</span>
+               <p class="landing-hero-card-title">Mathématiques Tronc Commun</p>
+               <p class="landing-hero-card-price">45 DH</p>
+            </div>
+            <div class="landing-hero-card landing-hero-card-2">
+               <span class="badge badge-bon-etat">Bon état</span>
+               <p class="landing-hero-card-title">Physique-Chimie 2BAC</p>
+               <p class="landing-hero-card-price">60 DH</p>
+            </div>
+            <div class="landing-hero-card landing-hero-card-3">
+                    <span class="badge badge-primary">
+                        <i class="fa-solid fa-tag"></i> Géographie
+                    </span>
+               <p class="landing-hero-card-title">Atlas du Monde — 1BAC</p>
+               <p class="landing-hero-card-price">35 DH</p>
+            </div>
+            <div class="landing-hero-float landing-hero-float-1">
+               <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="landing-hero-float landing-hero-float-2">
+               <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+         </div>
+
+      </div>
+   </section>
+
+   <!-- COMMENT ÇA MARCHE-->
+   <section class="landing-section" id="how">
+      <div class="landing-container">
+
+         <div class="landing-section-header">
+            <h2 class="landing-section-title">Comment ça marche ?</h2>
+            <p class="landing-section-subtitle">En 3 étapes simples, achète ou vends tes fournitures scolaires.</p>
+         </div>
+
+         <div class="landing-steps">
+
+            <div class="landing-step">
+               <div class="landing-step-icon landing-step-icon-primary">
+                  <i class="fa-solid fa-user-plus"></i>
+               </div>
+               <div class="landing-step-number">01</div>
+               <h3 class="landing-step-title">Crée ton compte</h3>
+               <p class="landing-step-text">Inscription gratuite et rapide. Renseigne ta ville pour voir les annonces près de chez toi.</p>
+            </div>
+
+            <div class="landing-step-arrow">
+               <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <div class="landing-step">
+               <div class="landing-step-icon landing-step-icon-secondary">
+                  <i class="fa-solid fa-camera"></i>
+               </div>
+               <div class="landing-step-number">02</div>
+               <h3 class="landing-step-title">Publie une annonce</h3>
+               <p class="landing-step-text">Décris ton article, fixe ton prix et publie en quelques secondes. C'est totalement gratuit.</p>
+            </div>
+
+            <div class="landing-step-arrow">
+               <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <div class="landing-step">
+               <div class="landing-step-icon landing-step-icon-accent">
+                  <i class="fa-solid fa-handshake"></i>
+               </div>
+               <div class="landing-step-number">03</div>
+               <h3 class="landing-step-title">Échange et économise</h3>
+               <p class="landing-step-text">Contacte le vendeur, conviens d'un lieu et récupère ton article à petit prix.</p>
+            </div>
+
+         </div>
+
+      </div>
+   </section>
+
+   <!-- CATÉGORIES-->
+   <section class="landing-section landing-section-alt" id="categories">
+      <div class="landing-container">
+
+         <div class="landing-section-header">
+            <h2 class="landing-section-title">Explore par catégorie</h2>
+            <p class="landing-section-subtitle">Trouve exactement ce dont tu as besoin pour cette année scolaire.</p>
+         </div>
+
+         <div class="landing-categories">
+
+            <a class="landing-category-card">
+               <div class="landing-category-icon">📚</div>
+               <p class="landing-category-name">Livres &amp; Manuels</p>
+               <span class="badge badge-primary">Populaire</span>
+            </a>
+
+            <a  class="landing-category-card">
+               <div class="landing-category-icon">✏️</div>
+               <p class="landing-category-name">Fournitures</p>
+               <span class="badge badge-secondary">Disponible</span>
+            </a>
+
+            <a class="landing-category-card">
+               <div class="landing-category-icon">🖥️</div>
+               <p class="landing-category-name">Informatique</p>
+               <span class="badge badge-accent">Nouveau</span>
+            </a>
+
+            <a class="landing-category-card">
+               <div class="landing-category-icon">🔬</div>
+               <p class="landing-category-name">Sciences</p>
+               <span class="badge badge-primary">Disponible</span>
+            </a>
+
+            <a class="landing-category-card">
+               <div class="landing-category-icon">🎨</div>
+               <p class="landing-category-name">Arts &amp; Dessin</p>
+               <span class="badge badge-secondary">Disponible</span>
+            </a>
+
+            <a class="landing-category-card">
+               <div class="landing-category-icon">🗂️</div>
+               <p class="landing-category-name">Classeurs &amp; Cahiers</p>
+               <span class="badge badge-primary">Disponible</span>
+            </a>
+
+         </div>
+
+      </div>
+   </section>
+
+   <!-- POURQUOI NOUS -->
+   <section class="landing-section" id="why">
+      <div class="landing-container">
+
+         <div class="landing-section-header">
+            <h2 class="landing-section-title">Pourquoi choisir SchoolSwap ?</h2>
+            <p class="landing-section-subtitle">Une plateforme pensée pour les étudiants marocains.</p>
+         </div>
+
+         <div class="landing-features">
+
+            <div class="landing-feature">
+               <div class="landing-feature-icon landing-feature-icon-primary">
+                  <i class="fa-solid fa-piggy-bank"></i>
+               </div>
+               <h3 class="landing-feature-title">Économise jusqu'à 70%</h3>
+               <p class="landing-feature-text">Achète tes manuels d'occasion à une fraction du prix neuf et garde ton budget pour l'essentiel.</p>
+            </div>
+
+            <div class="landing-feature">
+               <div class="landing-feature-icon landing-feature-icon-secondary">
+                  <i class="fa-solid fa-location-dot"></i>
+               </div>
+               <h3 class="landing-feature-title">Près de chez toi</h3>
+               <p class="landing-feature-text">Filtre les annonces par ville et retrouve des vendeurs dans ta ville pour éviter les frais d'envoi.</p>
+            </div>
+
+            <div class="landing-feature">
+               <div class="landing-feature-icon landing-feature-icon-accent">
+                  <i class="fa-solid fa-shield-halved"></i>
+               </div>
+               <h3 class="landing-feature-title">Plateforme de confiance</h3>
+               <p class="landing-feature-text">Annonces vérifiées, état des articles précisé (Neuf, Bon état, Usé) pour acheter en toute sérénité.</p>
+            </div>
+
+            <div class="landing-feature">
+               <div class="landing-feature-icon landing-feature-icon-primary">
+                  <i class="fa-solid fa-leaf"></i>
+               </div>
+               <h3 class="landing-feature-title">Éco-responsable</h3>
+               <p class="landing-feature-text">Donne une seconde vie à tes livres et participe à une démarche durable pour l'environnement.</p>
+            </div>
+
+         </div>
+
+      </div>
+   </section>
+
+   <!-- CTA FINAL -->
+   <section class="landing-cta">
+      <div class="landing-container landing-cta-inner">
+         <h2 class="landing-cta-title">Prêt à économiser sur ta rentrée ?</h2>
+         <p class="landing-cta-subtitle">Rejoins la communauté SchoolSwap et trouve tes fournitures scolaires dès aujourd'hui.</p>
+         <div class="landing-cta-actions">
+            <a href="inscription.xhtml" class="btn btn-primary btn-lg btn-pulse">
+               <i class="fa-solid fa-rocket"></i> Créer mon compte gratuitement
+            </a>
+            <a href="connexion.xhtml" class="btn btn-outline btn-lg">
+               <i class="fa-solid fa-eye"></i> Voir les annonces
+            </a>
+         </div>
+      </div>
+   </section>
+
+   <!-- FOOTER -->
+   <footer class="landing-footer">
+      <div class="landing-container landing-footer-inner">
+         <div class="landing-brand">
+            <div class="landing-brand-icon">🎒</div>
+            <span class="landing-brand-name">SchoolSwap</span>
+         </div>
+         <p class="landing-footer-text">© 2026 SchoolSwap — La marketplace scolaire d'occasion au Maroc.</p>
+         <div class="landing-footer-links">
+            <a href="connexion.xhtml" class="landing-footer-link">Connexion</a>
+            <a href="inscription.xhtml" class="landing-footer-link">Inscription</a>
+         </div>
+      </div>
+   </footer>
+
+</h:body>
+</html>

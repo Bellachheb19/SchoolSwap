@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SchoolSwap — Administration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+<h:body>
+    <h:panelGroup rendered="#{!loginBean.admin}">
+        <div class="access-denied">
+            <div class="access-denied-icon">🔒</div>
+            <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+                Accès refusé
+            </h1>
+            <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+                Vous n'avez pas les droits nécessaires pour accéder à cette page.
+            </p>
+            <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+                → Se connecter
+            </h:link>
+        </div>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{loginBean.admin}">
+        <ui:include src="./_sidebarAdmin.xhtml"/>
+    <div class="main-layout">
+
+            <main class="content-area">
+
+                <!-- ── En-tête ── -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">
+                            <span class="page-title-icon">
+                                <i class="fa-solid fa-shield-halved text-primary"></i>
+                            </span>
+                            Tableau de bord Admin
+                        </h1>
+                        <p class="page-subtitle">Bienvenue, #{loginBean.user.prenom}. Voici un aperçu de la plateforme.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="badge badge-primary">
+                            <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i>
+                            Plateforme active
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ── Bandeau de bienvenue ── -->
+                <div class="admin-welcome">
+                    <h2>
+                        <i class="fa-solid fa-hand-wave"></i>
+                        Bonjour, #{loginBean.user.prenom} #{loginBean.user.nom} !
+                    </h2>
+                    <p class="page-subtitle">
+                        Vous êtes connecté en tant qu'administrateur. Gérez les articles, les utilisateurs et les catégories depuis ce tableau de bord.
+                    </p>
+                </div>
+
+
+                <!-- ── Accès rapides ── -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fa-solid fa-bolt text-secondary"></i>
+                            Accès rapides
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-row">
+
+                            <a href="admin_articles.xhtml" class="stat-card stat-primary">
+                                <span class="stat-card-icon">📦</span>
+                                <div class="stat-card-label font-semibold">Gérer les articles</div>
+                                <div class="stat-card-label">
+                                    <i class="fa-solid fa-arrow-right text-primary"></i>
+                                </div>
+                            </a>
+
+                            <a href="admin_users.xhtml" class="stat-card stat-secondary">
+                                <span class="stat-card-icon">👥</span>
+                                <div class="stat-card-label font-semibold">Gérer les utilisateurs</div>
+                                <div class="stat-card-label">
+                                    <i class="fa-solid fa-arrow-right text-secondary"></i>
+                                </div>
+                            </a>
+
+                            <a href="admin_categories.xhtml" class="stat-card stat-accent">
+                                <span class="stat-card-icon">🗂️</span>
+                                <div class="stat-card-label font-semibold">Gérer les catégories</div>
+                                <div class="stat-card-label">
+                                    <i class="fa-solid fa-arrow-right text-primary"></i>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Informations plateforme ── -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fa-solid fa-circle-info text-primary"></i>
+                            À propos de la plateforme
+                        </h3>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-grid-2">
+
+                            <div>
+                                <p class="form-label">
+                                    <i class="fa-solid fa-tag form-label-icon"></i>
+                                    Nom de la plateforme
+                                </p>
+                                <p class="font-bold">SchoolSwap</p>
+                            </div>
+
+                            <div>
+                                <p class="form-label">
+                                    <i class="fa-solid fa-globe form-label-icon"></i>
+                                    Marché cible
+                                </p>
+                                <p class="font-bold">Maroc — Étudiants et lycéens</p>
+                            </div>
+
+                            <div>
+                                <p class="form-label">
+                                    <i class="fa-solid fa-bullseye form-label-icon"></i>
+                                    Mission
+                                </p>
+                                <p class="text-muted">Faciliter l'achat et la vente de matériaux scolaires d'occasion entre étudiants.</p>
+                            </div>
+
+                            <div>
+                                <p class="form-label">
+                                    <i class="fa-solid fa-calendar form-label-icon"></i>
+                                    Version
+                                </p>
+                                <p class="font-bold">SchoolSwap v1.0 — 2026</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer flex-between">
+                        <span class="text-muted" style="font-size: var(--font-size-xs);">
+                            <i class="fa-solid fa-lock"></i>
+                            Accès réservé aux administrateurs
+                        </span>
+                        <span class="badge badge-neuf">
+                            <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i>
+                            Système opérationnel
+                        </span>
+                    </div>
+                </div>
+
+            </main>
+
+    </div>
+    </h:panelGroup>
+</h:body>
+</html>
+
+
+
+
+
+

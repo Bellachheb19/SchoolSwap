@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inscription — SchoolSwap</title>
+    <meta name="description" content="Créez votre compte SchoolSwap et commencez à vendre vos livres et matériaux scolaires d'occasion."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <h:outputStylesheet library="css" name="schoolswap.css"/>
+</h:head>
+
+<h:body>
+
+    <div class="auth-page">
+        <div class="auth-card auth-card-wide">
+
+            <!-- En-tête -->
+            <div class="auth-card-header">
+                <div class="auth-logo">🎒</div>
+                <h1 class="auth-title">Créer un compte</h1>
+                <p class="auth-subtitle">Rejoignez <span class="auth-brand-name">SchoolSwap</span> — c'est gratuit !</p>
+            </div>
+
+            <!-- Corps -->
+            <div class="auth-card-body">
+
+                <h:form id="registerForm">
+
+                    <div class="form-grid-2">
+
+                        <div class="form-group">
+                            <label class="form-label" for="nom">
+                                <span class="form-label-icon">👤</span> Nom
+                            </label>
+                            <h:inputText id="nom"
+                                         styleClass="form-control"
+                                         value="#{registerBean.nom}"
+                                         required="true"
+                                         requiredMessage="Nom obligatoire"/>
+                            <h:message for="nom" styleClass="form-error"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="prenom">
+                                <span class="form-label-icon">👤</span> Prénom
+                            </label>
+                            <h:inputText id="prenom"
+                                         styleClass="form-control"
+                                         value="#{registerBean.prenom}"/>
+                        </div>
+
+                    </div>
+
+                    <div class="form-grid-2">
+
+                        <div class="form-group">
+                            <label class="form-label" for="telephone">
+                                <span class="form-label-icon">📱</span> Téléphone
+                            </label>
+                            <h:inputText id="telephone"
+                                         styleClass="form-control"
+                                         value="#{registerBean.telephone}"
+                                         required="true"
+                                         requiredMessage="Téléphone obligatoire"/>
+                            <h:message for="telephone" styleClass="form-error"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="ville">
+                                <span class="form-label-icon">📍</span> Ville
+                            </label>
+                            <h:inputText id="ville"
+                                         styleClass="form-control"
+                                         value="#{registerBean.ville}"/>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            <span class="form-label-icon">✉️</span> Adresse e-mail
+                        </label>
+                        <h:inputText id="email"
+                                     styleClass="form-control"
+                                     value="#{registerBean.email}"
+                                     required="true"
+                                     requiredMessage="Email obligatoire"/>
+                        <h:message for="email" styleClass="form-error"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <span class="form-label-icon">🔒</span> Mot de passe
+                        </label>
+                        <h:inputSecret id="password"
+                                       styleClass="form-control"
+                                       value="#{registerBean.password}"
+                                       required="true"
+                                       requiredMessage="Mot de passe obligatoire"/>
+                        <h:message for="password" styleClass="form-error"/>
+                    </div>
+
+                    <h:panelGroup rendered="#{not empty registerBean.message}">
+                        <div class="alert alert-error">
+                            ⚠️ <h:outputText value="#{registerBean.message}"/>
+                        </div>
+                    </h:panelGroup>
+
+                    <h:commandButton styleClass="btn btn-primary btn-full btn-lg"
+                                     value="Créer mon compte 🎉"
+                                     action="#{registerBean.register}"/>
+
+                </h:form>
+
+            </div>
+
+            <!-- Pied de page -->
+            <div class="auth-card-footer">
+                Déjà inscrit ?
+                <h:link value=" Se connecter" outcome="connexion.xhtml"/>
+            </div>
+
+        </div>
+    </div>
+
+</h:body>
+</html>

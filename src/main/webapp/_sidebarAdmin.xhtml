@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <nav class="sidebar">
+
+        <!-- Brand / Logo -->
+        <h:link outcome="accueilAdmin.xhtml" styleClass="sidebar-brand">
+            <div class="sidebar-brand-icon">🎒</div>
+            <div class="sidebar-brand-text">
+                <span class="sidebar-brand-name">SchoolSwap</span>
+                <span class="sidebar-brand-tagline">Administration</span>
+            </div>
+        </h:link>
+
+        <!-- Navigation -->
+        <ul class="sidebar-nav">
+
+            <li class="nav-section-label">Navigation</li>
+
+            <li>
+                <h:link outcome="accueilAdmin.xhtml" styleClass="nav-item">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">Accueil</span>
+                </h:link>
+            </li>
+
+            <li>
+                <h:link outcome="admin_articles.xhtml" styleClass="nav-item">
+                    <span class="nav-item-icon">📦</span>
+                    <span class="nav-item-text">Articles</span>
+                </h:link>
+            </li>
+
+            <li>
+                <h:link outcome="admin_users.xhtml" styleClass="nav-item">
+                    <span class="nav-item-icon">👥</span>
+                    <span class="nav-item-text">Utilisateurs</span>
+                </h:link>
+            </li>
+
+            <li>
+                <h:link outcome="admin_categories.xhtml" styleClass="nav-item">
+                    <span class="nav-item-icon">🗂️</span>
+                    <span class="nav-item-text">Catégories</span>
+                </h:link>
+            </li>
+
+            <li class="nav-section-label">Compte</li>
+
+            <li>
+                <h:form>
+                    <h:commandLink action="#{loginBean.logout()}" styleClass="nav-item nav-logout">
+                        <span class="nav-item-icon">🚪</span>
+                        <span class="nav-item-text">Déconnexion</span>
+                    </h:commandLink>
+                </h:form>
+            </li>
+
+        </ul>
+
+        <!-- Footer sidebar -->
+        <div class="sidebar-footer">
+            <p class="sidebar-footer-text">© 2026 SchoolSwap</p>
+        </div>
+
+    </nav>
+
+
+</ui:composition>

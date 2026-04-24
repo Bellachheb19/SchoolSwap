@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>Mes annonces — SchoolSwap</title>
+   <meta name="description" content="Gérez vos annonces de livres et matériaux scolaires sur SchoolSwap."/>
+   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+   <h:outputStylesheet library="css" name="schoolswap.css"/>
+</h:head>
+
+<h:body>
+   <h:panelGroup rendered="#{!loginBean.etudiant}">
+      <div class="access-denied">
+         <div class="access-denied-icon">🔒</div>
+         <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+            Accès refusé
+         </h1>
+         <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+            Vous n'avez pas les droits nécessaires pour accéder à cette page.
+         </p>
+         <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+            → Se connecter
+         </h:link>
+      </div>
+   </h:panelGroup>
+
+   <h:panelGroup rendered="#{loginBean.etudiant}">
+
+   <div class="main-layout">
+
+      <!-- Sidebar -->
+      <ui:include src="./_sidebar.xhtml"/>
+
+      <!-- Zone de contenu -->
+      <main class="content-area">
+
+         <!-- En-tête -->
+         <div class="page-header">
+            <div>
+               <h1 class="page-title">
+                  <span class="page-title-icon">📋</span>
+                  Mes annonces
+               </h1>
+               <p class="page-subtitle">Gérez et suivez vos publications</p>
+            </div>
+            <h:form>
+               <h:commandLink styleClass="btn btn-primary" action="#{annoncesBean.preparerCreation}">
+                  ➕ Nouvelle annonce
+               </h:commandLink>
+            </h:form>
+         </div>
+
+         <!-- Messages globaux -->
+         <h:messages globalOnly="true" styleClass="alert alert-success" layout="list"/>
+
+         <!-- Statistiques -->
+         <div class="stats-row">
+            <div class="stat-card stat-primary" style="animation-delay:0.05s">
+               <span class="stat-card-icon">📦</span>
+               <div class="stat-card-value">#{annoncesBean.totalAnnonces}</div>
+               <div class="stat-card-label">Total annonces</div>
+            </div>
+            <div class="stat-card stat-secondary" style="animation-delay:0.10s">
+               <span class="stat-card-icon">✨</span>
+               <div class="stat-card-value">#{annoncesBean.totalNeuf}</div>
+               <div class="stat-card-label">Neuves</div>
+            </div>
+            <div class="stat-card stat-accent" style="animation-delay:0.15s">
+               <span class="stat-card-icon">👍</span>
+               <div class="stat-card-value">#{annoncesBean.totalBonEtat}</div>
+               <div class="stat-card-label">Bon état</div>
+            </div>
+            <div class="stat-card stat-muted" style="animation-delay:0.20s">
+               <span class="stat-card-icon">🔄</span>
+               <div class="stat-card-value">#{annoncesBean.totalAncien}</div>
+               <div class="stat-card-label">Usées</div>
+            </div>
+         </div>
+
+         <!-- Filtres -->
+         <h:form id="filtreForm">
+            <div class="filters-bar">
+               <span style="font-size:1.1rem;">🔍</span>
+               <h:inputText styleClass="form-control"
+                            style="flex:1; min-width:150px;"
+                            value="#{annoncesBean.motCle}"
+                            placeholder="Rechercher..."/>
+
+               <h:selectOneMenu styleClass="form-control" style="min-width:160px;"
+                                value="#{annoncesBean.villeFiltre}">
+                  <f:selectItem itemLabel="📍 Toutes les villes" itemValue=""/>
+                  <f:selectItems value="#{annoncesBean.villes}" var="v"
+                                 itemValue="#{v}" itemLabel="#{v}"/>
+               </h:selectOneMenu>
+
+               <h:selectOneMenu styleClass="form-control" style="min-width:180px;"
+                                value="#{annoncesBean.categorieFiltre}">
+                  <f:selectItem itemLabel="📚 Toutes les catégories" itemValue=""/>
+                  <f:selectItems value="#{annoncesBean.categories}" var="c"
+                                 itemValue="#{c.id}" itemLabel="#{c.nom}"/>
+               </h:selectOneMenu>
+
+               <h:commandButton styleClass="btn btn-primary" action="#{annoncesBean.filtrer}" value="Filtrer"/>
+               <h:commandButton styleClass="btn btn-ghost" action="#{annoncesBean.reinitialiserFiltres}" value="Réinitialiser"/>
+            </div>
+         </h:form>
+
+         <!-- Tableau des annonces -->
+         <h:form id="tableForm">
+            <div class="card">
+
+               <div class="card-header">
+                  <span style="font-weight:700; font-size:1rem;">📄 Liste des annonces</span>
+               </div>
+
+               <div class="table-wrapper" style="border:none; box-shadow:none; border-radius:0;">
+                  <table class="data-table">
+                     <thead>
+                     <tr>
+                        <th>📝 Annonce</th>
+                        <th>💰 Prix</th>
+                        <th>📍 Ville</th>
+                        <th>📅 Date</th>
+                        <th>🏷️ État</th>
+                        <th>⚙️ Actions</th>
+                     </tr>
+                     </thead>
+                     <tbody>
+
+                     <h:panelGroup rendered="#{empty annoncesBean.annonces}">
+                        <tr>
+                           <td colspan="6">
+                              <div class="empty-state" style="padding:3rem 1rem;">
+                                 <div class="empty-state-icon">📭</div>
+                                 <p class="empty-state-title">Aucune annonce trouvée</p>
+                              </div>
+                           </td>
+                        </tr>
+                     </h:panelGroup>
+
+                     <ui:repeat value="#{annoncesBean.annonces}" var="a">
+                        <tr>
+
+
+
+                           <td>
+                              <div style="display:flex; align-items:center; gap:12px;">
+
+                                 <!-- Miniature -->
+                                 <h:graphicImage value="/#{a.photo}"
+                                                 rendered="#{not empty a.photo}"
+                                                 style="width:55px; height:55px; object-fit:cover; border-radius:10px; border:1px solid #E8ECF0;"/>
+
+                                 <!-- Image par défaut si aucune photo -->
+                                 <h:panelGroup rendered="#{empty a.photo}">
+                                    <div style="width:55px; height:55px; border-radius:10px; background:#F5F7FA; display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+                                       📚
+                                    </div>
+                                 </h:panelGroup>
+
+                                 <!-- Infos -->
+                                 <div>
+                                    <div style="font-weight:700;">#{a.titre}</div>
+                                    <div style="font-size:0.8rem; color:var(--color-text-muted);">
+                                       #{a.idCat.nom}
+                                    </div>
+                                 </div>
+
+                              </div>
+                           </td>
+
+
+
+                           <td>
+                              <span style="color:var(--color-secondary-dark); font-weight:700;">
+                                 <h:outputText value="#{a.prix}">
+                                    <f:convertNumber pattern="#,##0.00"/>
+                                 </h:outputText> DH
+                              </span>
+                           </td>
+
+                           <td>
+                              <span class="article-city">📍 #{a.ville}</span>
+                           </td>
+
+                           <td>
+                              <span style="color:var(--color-text-muted); font-size:0.85rem;">
+                                 <h:outputText value="#{a.datePublication}"/>
+                              </span>
+                           </td>
+
+                           <td>
+                              <h:panelGroup rendered="#{a.etat == 'Neuf'}">
+                                 <span class="badge badge-neuf">✨ Neuf</span>
+                              </h:panelGroup>
+                              <h:panelGroup rendered="#{a.etat == 'Bon_Etat'}">
+                                 <span class="badge badge-bon-etat">👍 Bon état</span>
+                              </h:panelGroup>
+                              <h:panelGroup rendered="#{a.etat == 'Ancien_Usage'}">
+                                 <span class="badge badge-use">🔄 Usé</span>
+                              </h:panelGroup>
+                           </td>
+
+                           <td>
+                              <div class="table-actions">
+                                 <h:commandLink styleClass="btn btn-outline btn-sm"
+                                               action="#{annoncesBean.goEditionId(a.id)}">
+                                    ✏️ Éditer
+                                 </h:commandLink>
+                                 <h:commandLink styleClass="btn btn-danger btn-sm"
+                                               action="#{annoncesBean.supprimer(a.id)}"
+                                               onclick="return confirm('Supprimer cette annonce ?');">
+                                    🗑️ Supprimer
+                                 </h:commandLink>
+                              </div>
+                           </td>
+
+                        </tr>
+                     </ui:repeat>
+
+                     </tbody>
+                  </table>
+               </div>
+
+            </div>
+         </h:form>
+
+      </main>
+
+   </div>
+   </h:panelGroup>
+</h:body>
+</html>

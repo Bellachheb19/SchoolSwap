@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:metadata>
+   <f:viewAction action="#{annoncesBean.onPageGestionLoad}"/>
+</f:metadata>
+
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>Gestion annonce — SchoolSwap</title>
+   <meta name="description" content="Créer ou modifier une annonce sur SchoolSwap."/>
+   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+   <h:outputStylesheet library="css" name="schoolswap.css"/>
+</h:head>
+
+<h:body>
+   <h:panelGroup rendered="#{!loginBean.etudiant}">
+      <div class="access-denied">
+         <div class="access-denied-icon">🔒</div>
+         <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+            Accès refusé
+         </h1>
+         <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+            Vous n'avez pas les droits nécessaires pour accéder à cette page.
+         </p>
+         <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+            → Se connecter
+         </h:link>
+      </div>
+   </h:panelGroup>
+
+   <h:panelGroup rendered="#{loginBean.etudiant}">
+
+   <div class="main-layout">
+
+      <!-- Sidebar -->
+      <ui:include src="./_sidebar.xhtml"/>
+
+      <!-- Zone de contenu -->
+      <main class="content-area">
+
+         <!-- En-tête -->
+         <div class="page-header">
+            <div>
+               <h1 class="page-title">
+                  <span class="page-title-icon">#{annoncesBean.modeEdition ? '✏️' : '➕'}</span>
+                  #{annoncesBean.modeEdition ? 'Modifier une annonce' : 'Nouvelle annonce'}
+               </h1>
+               <p class="page-subtitle">#{annoncesBean.modeEdition ? 'Mettez à jour les informations de votre annonce' : 'Publiez votre article scolaire'}</p>
+            </div>
+            <h:link styleClass="btn btn-ghost" outcome="mes-annonces.xhtml">← Mes annonces</h:link>
+         </div>
+
+         <!-- Messages globaux -->
+         <h:messages globalOnly="true" styleClass="alert alert-success" layout="list"/>
+
+         <!-- Formulaire -->
+         <div class="card" style="max-width:680px; margin:0 auto;">
+
+            <div class="card-header">
+               <span style="font-weight:700;">📝 Informations de l'article</span>
+            </div>
+
+            <div class="card-body">
+               <h:form id="gestionForm" enctype="multipart/form-data">
+
+                  <div class="form-grid-2">
+                     <!-- Titre -->
+                     <div class="form-group">
+                        <label class="form-label" for="titre">
+                           <span class="form-label-icon">📌</span> Titre de l'annonce
+                        </label>
+                        <h:inputText id="titre"
+                                     styleClass="form-control"
+                                     value="#{annoncesBean.articleCourant.titre}"
+                                     required="true"
+                                     requiredMessage="Titre requis"/>
+                        <h:message for="titre" styleClass="form-error"/>
+                     </div>
+
+                     <div class="form-group">
+                        <label class="form-label" for="auteur">
+                           <span class="form-label-icon">👤</span> Auteur (si c'est un livre)
+                        </label>
+                        <h:inputText id="auteur"
+                                     styleClass="form-control"
+                                     value="#{annoncesBean.articleCourant.auteur}"/>
+                     </div>
+                  </div>
+
+                  <div class="form-grid-2">
+
+                     <!-- Catégorie -->
+                     <div class="form-group">
+                        <label class="form-label" for="categorie">
+                           <span class="form-label-icon">📚</span> Catégorie
+                        </label>
+                        <h:selectOneMenu id="categorie"
+                                         styleClass="form-control"
+                                         value="#{annoncesBean.selectedCategoryId}"
+                                         required="true"
+                                         requiredMessage="Catégorie requise">
+                           <f:selectItem itemValue="" itemLabel="Choisir..."/>
+                           <f:selectItems value="#{annoncesBean.categories}" var="cat"
+                                          itemValue="#{cat.id}" itemLabel="#{cat.nom}"/>
+                        </h:selectOneMenu>
+                     </div>
+
+                     <!-- État -->
+                     <div class="form-group">
+                        <label class="form-label" for="etat">
+                           <span class="form-label-icon">🏷️</span> État de l'article
+                        </label>
+                        <h:selectOneMenu id="etat"
+                                         styleClass="form-control"
+                                         value="#{annoncesBean.selectedEtatName}"
+                                         required="true"
+                                         requiredMessage="État requis">
+                           <f:selectItem itemValue="" itemLabel="Choisir..."/>
+                           <f:selectItem itemValue="Neuf" itemLabel="✨ Neuf"/>
+                           <f:selectItem itemValue="Bon_Etat" itemLabel="👍 Bon état"/>
+                           <f:selectItem itemValue="Ancien_Usage" itemLabel="🔄 Usé"/>
+                        </h:selectOneMenu>
+                     </div>
+
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group">
+                     <label class="form-label" for="description">
+                        <span class="form-label-icon">📄</span> Description
+                     </label>
+                     <h:inputTextarea id="description"
+                                      styleClass="form-control"
+                                      value="#{annoncesBean.articleCourant.description}"
+                                      required="true"
+                                      requiredMessage="Description requise"
+                                      rows="4"/>
+                  </div>
+
+                  <div class="form-grid-2">
+
+                     <!-- Prix -->
+                     <div class="form-group">
+                        <label class="form-label" for="prix">
+                           <span class="form-label-icon">💰</span> Prix (DH)
+                        </label>
+                        <h:inputText id="prix"
+                                     styleClass="form-control"
+                                     value="#{annoncesBean.articleCourant.prix}"
+                                     required="true"
+                                     requiredMessage="Prix requis"/>
+                     </div>
+
+                     <!-- Ville -->
+                     <div class="form-group">
+                        <label class="form-label" for="ville">
+                           <span class="form-label-icon">📍</span> Ville
+                        </label>
+                        <h:inputText id="ville"
+                                     styleClass="form-control"
+                                     value="#{annoncesBean.articleCourant.ville}"
+                                     required="true"
+                                     requiredMessage="Ville requise"/>
+                     </div>
+
+
+                     <div class="form-group">
+                        <label class="form-label">
+                           <span class="form-label-icon">📷</span> Photo de l'article
+                        </label>
+
+                        <h:inputFile id="photoUpload"
+                                     value="#{annoncesBean.uploadedFile}"
+                                     style="display:none"
+                                     onchange="document.getElementById('nomFichier').innerText = this.files[0] ? '✅ ' + this.files[0].name : 'Aucun fichier choisi';"/>
+
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="document.getElementById('gestionForm:photoUpload').click()">
+                           📁 Importer la photo
+                        </button>
+                        <div id="nomFichier"
+                             style="margin-top:8px; font-size:0.9rem; color:#666;">
+                           Aucun fichier choisi
+                        </div>
+
+                        <h:panelGroup rendered="#{not empty annoncesBean.articleCourant.photo}">
+                           <div style="margin-top:10px;">
+                              <img src="#{request.contextPath}/uploads/#{annoncesBean.articleCourant.photo}"
+                                   style="width:120px; height:120px; object-fit:cover; border-radius:10px;"/>
+                           </div>
+                        </h:panelGroup>
+                     </div>
+
+
+
+                  </div>
+
+                  <!-- Actions -->
+                  <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1.5rem;">
+                     <h:link styleClass="btn btn-ghost" outcome="mes-annonces.xhtml">
+                        ✕ Annuler
+                     </h:link>
+                     <h:commandButton styleClass="btn btn-primary btn-pulse"
+                                      action="#{annoncesBean.sauvegarder}"
+                                      value="#{annoncesBean.modeEdition ? '💾 Enregistrer' : '🚀 Publier'}"/>
+                  </div>
+
+               </h:form>
+            </div>
+
+         </div>
+
+      </main>
+
+   </div>
+   </h:panelGroup>
+</h:body>
+</html>

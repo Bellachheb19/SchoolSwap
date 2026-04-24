@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+   <meta charset="UTF-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>SchoolSwap - Accueil</title>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+   <h:outputStylesheet name="css/schoolswap.css"/>
+</h:head>
+
+<h:body>
+   <h:panelGroup rendered="#{!loginBean.etudiant}">
+      <div class="access-denied">
+         <div class="access-denied-icon">🔒</div>
+         <h1 style="font-size:var(--font-size-2xl); font-weight:800; margin-bottom:var(--space-3);">
+            Accès refusé
+         </h1>
+         <p style="color:var(--color-text-muted); margin-bottom:var(--space-6);">
+            Vous n'avez pas les droits nécessaires pour accéder à cette page.
+         </p>
+         <h:link styleClass="btn btn-primary" outcome="connexion.xhtml">
+            → Se connecter
+         </h:link>
+      </div>
+   </h:panelGroup>
+
+   <h:panelGroup rendered="#{loginBean.etudiant}">
+      <ui:include src="./_sidebar.xhtml"/>
+   <div class="main-layout">
+
+         <main class="content-area">
+
+            <div class="page-header">
+               <div>
+                  <h2 class="page-title">
+                     <i class="fa-solid fa-book-open page-title-icon text-primary"></i>
+                     Tableau de Bord
+                  </h2>
+                  <p class="page-subtitle">Trouvez, achetez ou échangez du matériel scolaire.</p>
+               </div>
+
+               <div class="flex" style="gap: var(--space-4); align-items: center;">
+
+                  <a href="profil.xhtml" class="flex" style="align-items: center; gap: var(--space-2); text-decoration: none;">
+                           <span class="font-semibold text-muted">
+                               #{loginBean.user.prenom} #{loginBean.user.nom}
+                           </span>
+                     <img src="https://ui-avatars.com/api/?name=#{loginBean.user.prenom}+#{loginBean.user.nom}&amp;background=27AE60&amp;color=fff"
+                          alt="Profile"
+                          style="height: 40px; width: 40px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);" />
+                  </a>
+
+                  <a href="gestion-annonce.xhtml" class="btn btn-primary">
+                     <i class="fa-solid fa-plus"></i> Ajouter une annonce
+                  </a>
+               </div>
+            </div>
+
+            <h:form id="contentForm">
+
+               <div class="filters-bar">
+
+                  <div class="form-group mb-0" style="flex: 1; min-width: 250px;">
+                     <h:inputText value="#{accueilBean.motCle}" class="form-control" a:placeholder="🔍 Rechercher un article ou une ville..." />
+                  </div>
+
+                  <div class="form-group mb-0" style="min-width: 200px;">
+                     <h:selectOneMenu value="#{accueilBean.categorieFiltre}" class="form-control">
+                        <f:selectItem itemValue="Tous" itemLabel="📂 Toutes les catégories" />
+                        <f:selectItems value="#{accueilBean.categories}" var="cat" itemValue="#{cat.nom}" itemLabel="#{cat.nom}" />
+                        <f:ajax event="change" listener="#{accueilBean.filtrerAjax}" render="gridContainer" />
+                     </h:selectOneMenu>
+                  </div>
+
+                  <h:commandButton action="#{accueilBean.filtrerAjax}" value="Filtrer" class="btn btn-secondary">
+                     <f:ajax execute="@form" render="gridContainer" />
+                  </h:commandButton>
+
+               </div>
+
+               <h:panelGroup id="gridContainer" layout="block">
+
+                  <div class="articles-grid">
+
+                     <ui:repeat value="#{accueilBean.annonces}" var="annonce">
+                        <a href="details.xhtml?id=#{annonce.id}" class="article-card">
+
+
+                           <div style="height: 180px; width: 100%; background: var(--color-bg); position: relative; overflow: hidden;">
+
+                              <img src="#{empty annonce.photo
+                                           ? 'https://placehold.co/600x400/EAFAF1/27AE60?text=Image+Article'
+                                           : annonce.photo}"
+                                      alt="#{annonce.titre}"
+                                      style="width: 100%; height: 100%; object-fit: cover;" />
+
+
+                              <div style="position: absolute; bottom: 10px; left: 10px;">
+                                 <h:panelGroup rendered="#{annonce.etat == 'Neuf'}">
+                                    <span class="badge badge-neuf"><i class="fa-solid fa-star"></i> Neuf</span>
+                                 </h:panelGroup>
+                                 <h:panelGroup rendered="#{annonce.etat == 'Bon_Etat'}">
+                                    <span class="badge badge-bon-etat"><i class="fa-solid fa-check-circle"></i> Bon état</span>
+                                 </h:panelGroup>
+                                 <h:panelGroup rendered="#{annonce.etat == 'Ancien_Usage'}">
+                                    <span class="badge badge-use"><i class="fa-solid fa-clock"></i> Usé</span>
+                                 </h:panelGroup>
+                              </div>
+                           </div>
+
+                           <div class="article-card-body">
+                              <h3 class="article-card-title">#{annonce.titre}</h3>
+
+                              <p class="article-card-description">
+                                 #{annonce.description}
+                              </p>
+                           </div>
+
+                           <div class="article-card-footer">
+                              <div class="article-price">
+                                 #{annonce.prix} <span class="article-price-currency">DH</span>
+                              </div>
+
+                              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                 <div class="article-city">
+                                    <i class="fa-solid fa-location-dot"></i> #{annonce.ville}
+                                 </div>
+                                 <div class="badge badge-primary">
+                                    #{annonce.idCat.nom}
+                                 </div>
+                              </div>
+                           </div>
+
+                        </a>
+                     </ui:repeat>
+
+                  </div>
+
+                  <h:panelGroup rendered="#{empty accueilBean.annonces}">
+                     <div class="empty-state">
+                        <i class="fa-solid fa-box-open empty-state-icon text-muted"></i>
+                        <h3 class="empty-state-title">Aucun article trouvé</h3>
+                        <p class="empty-state-text">Nous n'avons trouvé aucune annonce correspondant à votre recherche. Essayez de modifier vos filtres.</p>
+                        <h:commandButton action="#{accueilBean.setMotCle('')}" value="Réinitialiser" class="btn btn-outline mt-4">
+                           <f:ajax listener="#{accueilBean.setCategorieFiltre('')}" render="contentForm"/>
+                           <f:ajax listener="#{accueilBean.filtrerAjax()}" render="contentForm" />
+                        </h:commandButton>
+                     </div>
+                  </h:panelGroup>
+
+               </h:panelGroup>
+            </h:form>
+
+         </main>
+   </div>
+   </h:panelGroup>
+</h:body>
+</html>
